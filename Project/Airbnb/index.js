@@ -1,19 +1,25 @@
-
-
-
-
 if(process.env.NODE_ENV != "production"){
 require('dotenv').config()
 
 }
-
-
 const express=require('express');
 const mongoose=require('mongoose');
 const wrapAsync=require('./utils/wrapAsync.js');
-// const MONGO_URL="mongodb://127.0.0.1:27017/Airbnb-2";
+const MONGO_URL="mongodb://127.0.0.1:27017/Airbnb-2";
 const dbUrl=process.env.ATLASDB_URL;
 const app=express();
+//for applying css
+app.use(express.static('public'));
+
+//for ejs-mate template
+const ejsMate=require('ejs-mate');
+
+app.engine('ejs',ejsMate);
+
+//for using another method except get & post
+const methodOverride=require('method-override');
+app.use(methodOverride('_method'));
+app.use(express.urlencoded({extended:true}));
 
 
 const flash=require('connect-flash');
@@ -27,16 +33,13 @@ main().then(()=>{
     console.log(err);
 })
 async function main(){
-    mongoose.connect(dbUrl);
+    mongoose.connect(MONGO_URL);
 
 }
 //expressError
 const ExpressError=require('./utils/ExpressError.js');
 
-//for using another method except get & post
-const methodOverride=require('method-override');
-app.use(methodOverride('_method'));
-app.use(express.urlencoded({extended:true}));
+
 //for apply express-session
 const  session=require('express-session');
 const MongoStore = require('connect-mongo');
@@ -86,6 +89,7 @@ app.use((req,res,next)=>{
 app.get('/',wrapAsync((req,res)=>{
     
     req.flash('success','Welcome to the home page of Airbnb!');
+    // console.log(req.flash('success'));
     res.render("./listings/home.ejs");
     
 }));
@@ -120,13 +124,7 @@ app.use('/listings',listingRouter);
 const reviewRouter=require('./routes/review.js');
 app.use('/listings/:id/reviews',reviewRouter);
 
-//for applying css
-app.use(express.static('public'));
 
-//for ejs-mate template
-const ejsMate=require('ejs-mate');
-
-app.engine('ejs',ejsMate);
 
 //inserting sample data in db...
 
