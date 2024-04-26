@@ -1,6 +1,27 @@
 import React, { useState } from 'react';
 import '../App.css';
 
+/*
+
+decimal number system-10(0,1,2,3,4,5,6,7,8,9)-->100 2400
+binary number system(0,1)
+
+decimal    binary
+           8421        3
+00         0000
+01         0001
+02         0010
+08         1000
+15         1111       
+
+
+*/
+
+//hexadecimal
+// hexadecimal(16)//0-9  A,b,c,d,e,f
+
+
+
 function RandomBgColor() {
   const [backgroundColor, setBackgroundColor] = useState('#ffffff');
 
